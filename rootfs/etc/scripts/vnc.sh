@@ -32,25 +32,21 @@ if ! which vncserver >/dev/null 2>&1; then
     HOSTNAME=$(hostname)
     if ! grep -q "127.0.1.1" /etc/hosts; then echo "127.0.1.1 ${HOSTNAME:-satdump}" >> /etc/hosts; fi
 
-    mkdir -p $HOME/.vnc
-    echo "$VNC_PASSWORD" | vncpasswd -f > $HOME/.vnc/passwd
-    chmod 600 $HOME/.vnc/passwd
+    mkdir -p "$HOME/.vnc"
+    echo "$VNC_PASSWORD" | vncpasswd -f > "$HOME/.vnc/passwd"
+    chmod 600 "$HOME/.vnc/passwd"
 
-    touch /root/.Xauthority
+    touch "$HOME/.Xauthority"
 
-    mkdir -p $HOME/Desktop
+    mkdir -p "$HOME/Desktop"
     {   echo '#!/command/with-contenv bash'
         echo 'source /scripts/common'
         echo 'pkill satdump >/dev/null 2>&1'
         # shellcheck disable=SC2016
-        echo '"${s6wrap[@]}" $RUN_CMD'
-    } > $HOME/Desktop/satdump-vnc
-    chmod +x $HOME/Desktop/satdump-vnc
+        echo '"${s6wrap[@]}" /usr/bin/satdump-ui'
+    } > "$HOME/satdump-vnc"
+    chmod +x "$HOME/satdump-vnc"
 
-    make sure that shell scripts are executable on the desktop
-    if ! grep -q "misc-exec-shell-scripts-by-default" "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml" >/dev/null 2>&1; then
-        sed -i 's|</channel>|<property name="misc-exec-shell-scripts-by-default" type="bool" value="true"/></channel>|g' "$HOME/.config/xfce4/xfconf/xfce-perchannel-xml/thunar.xml"
-    fi
 fi
 
 "${s6wrap[@]}" echo "Starting VNC server at $RESOLUTION..."

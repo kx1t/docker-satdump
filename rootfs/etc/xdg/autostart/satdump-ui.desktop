@@ -1,0 +1,5 @@
+[Desktop Entry]
+Type=Application
+Name=SatSumo
+Exec=/usr/bin/satdump-ui
+Terminal=false
