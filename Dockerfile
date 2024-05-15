@@ -66,7 +66,7 @@ RUN set -x && \
     xargs -a /src/satdump/packages.runner apt install -qy && \
     mkdir build && \
     pushd build && \
-    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=OFF -DBUILD_ZIQ=OFF .. && \
+    cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_GUI=ON -DBUILD_ZIQ=OFF .. && \
     make -j`nproc` && \
     make install && \
     popd && popd && \
